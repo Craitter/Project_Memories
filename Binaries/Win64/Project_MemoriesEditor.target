@@ -4870,6 +4870,26 @@
 			"Type": "RequiredResource"
 		},
 		{
+			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystem.dll",
+			"Type": "DynamicLibrary"
+		},
+		{
+			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystem.pdb",
+			"Type": "SymbolFile"
+		},
+		{
+			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystemEditor.dll",
+			"Type": "DynamicLibrary"
+		},
+		{
+			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystemEditor.pdb",
+			"Type": "SymbolFile"
+		},
+		{
+			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/Binaries/Win64/UnrealEditor.modules",
+			"Type": "RequiredResource"
+		},
+		{
 			"Path": "$(EngineDir)/Plugins/Media/AndroidMedia/Binaries/Win64/UnrealEditor-AndroidMediaEditor.dll",
 			"Type": "DynamicLibrary"
 		},
@@ -26849,6 +26869,10 @@
 		},
 		{
 			"Path": "$(EngineDir)/Plugins/Interchange/Runtime/Interchange.uplugin",
+			"Type": "UFS"
+		},
+		{
+			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/MounteaDialogueSystem.uplugin",
 			"Type": "UFS"
 		},
 		{
