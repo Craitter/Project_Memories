@@ -7,6 +7,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
 #include "MemoriesCharacter.h"
+#include "InteractionComponent.h"
+#include "Blueprint/UserWidget.h"
+#include "Widgets/GameOverlayWidget.h"
 
 void AMemoriesPlayerController::BeginPlay()
 {
@@ -16,7 +19,16 @@ void AMemoriesPlayerController::BeginPlay()
 	{
 		if(!IMC_Default_MK.IsNull())
 		{
-			Subsystem->AddMappingContext(IMC_Default_MK.Get(), 0);
+			Subsystem->AddMappingContext(IMC_Default_MK.LoadSynchronous(), 0);
+		}
+	}
+
+	if(GameOverlayClass != nullptr)
+	{
+		GameOverlayWidget = CreateWidget<UGameOverlayWidget>(this ,GameOverlayClass);
+		if(GameOverlayWidget != nullptr)
+		{
+			GameOverlayWidget->AddToViewport();
 		}
 	}
 }
@@ -32,7 +44,8 @@ void AMemoriesPlayerController::SetupInputComponent()
 
 	EnhancedInputComponent->BindAction(IA_Look, ETriggerEvent::Triggered, this, &ThisClass::OnLookInput);
 
-	EnhancedInputComponent->BindAction(IA_Interact, ETriggerEvent::Triggered, this, &ThisClass::OnInteractInput);
+	EnhancedInputComponent->BindAction(IA_Interact, ETriggerEvent::Started, this, &ThisClass::OnInteractBeginInput);
+	EnhancedInputComponent->BindAction(IA_Interact, ETriggerEvent::Completed, this, &ThisClass::OnInteractEndInput);
 
 	EnhancedInputComponent->BindAction(IA_Crouch, ETriggerEvent::Triggered, this, &ThisClass::OnCrouchInput);
 
@@ -56,7 +69,88 @@ void AMemoriesPlayerController::OnPossess(APawn* InPawn)
 		MemoriesCharacter->GetCameraPitchMinMax(Min, Max);
 		PlayerCameraManager->ViewPitchMin = Min;
 		PlayerCameraManager->ViewPitchMax = Max;
+		const TWeakObjectPtr<UInteractionComponent> CharacterInteractionComponent = Cast<UInteractionComponent>(
+			MemoriesCharacter->GetComponentByClass(UInteractionComponent::StaticClass()));
+		if(!CharacterInteractionComponent.IsValid())
+		{
+			UE_LOG(LogTemp, Error , TEXT("%s() InteractionComponentInControllerNotValid!"), *FString(__FUNCTION__));
+		}
+		CharacterInteractionComponent->OnInteractableLost.BindUObject(this, &ThisClass::InteractableLost);
+		CharacterInteractionComponent->OnNewInteractableFound.BindUObject(this, &ThisClass::NewInteractableFound);
+		CharacterInteractionComponent->OnInteractionStarted.BindUObject(this, &ThisClass::InteractionStarted);
+		CharacterInteractionComponent->OnInteractionFinished.BindUObject(this, &ThisClass::InteractionFinished);
 	}
+	
+}
+
+void AMemoriesPlayerController::NewInteractableFound(float InteractDuration, FInteractMessageInformation InteractMessageInformation)
+{
+	FFormatNamedArguments Args;
+	if(InteractDuration > 0)
+	{
+		Args.Add(TEXT("HoldPress"), FText::FromString(TEXT("Hold")));
+	}
+	else
+	{
+		Args.Add(TEXT("HoldPress"), FText::FromString(TEXT("Press")));
+	}
+	Args.Add(TEXT("verb"), GetInteractableVerb(InteractMessageInformation.InteractMessageType));
+	Args.Add(TEXT("name"), InteractMessageInformation.InteractableName);
+	const FText OutText = FText::Format(InteractPromptBase, Args);
+	if(GameOverlayWidget != nullptr)
+	{
+		GameOverlayWidget->ShowInteractionPrompt(InteractDuration, OutText);
+	}
+	//Todo: Update Widget
+}
+
+void AMemoriesPlayerController::InteractableLost()
+{
+	//Todo: UpdateWidget
+	if(GameOverlayWidget != nullptr)
+	{
+		GameOverlayWidget->HideInteractionPrompt();
+		GameOverlayWidget->StopInteractionTimer();
+	}
+}
+
+void AMemoriesPlayerController::InteractionStarted(float InteractDuration)
+{
+	//TODO: Update Widget
+	if(GameOverlayWidget != nullptr)
+	{
+		GameOverlayWidget->StartInteractionTimer(InteractDuration);
+	}
+}
+
+void AMemoriesPlayerController::InteractionFinished()
+{
+	if(GameOverlayWidget != nullptr)
+	{
+		GameOverlayWidget->StopInteractionTimer();
+	}
+}
+
+FText AMemoriesPlayerController::GetInteractableVerb(EInteractMessageType MessageInformation)
+{
+	FText OutText = FText::GetEmpty();
+	switch (MessageInformation)
+	{
+		case EInteractMessageType::IMT_None:
+			UE_LOG(LogTemp, Error , TEXT("%s() Shouldnt be called with none"), *FString(__FUNCTION__));
+			break;
+	case EInteractMessageType::IMT_Pickup:
+			OutText = FText::FromString(TEXT("Pick up"));
+			break;
+		case EInteractMessageType::IMT_Open:
+			OutText = FText::FromString(TEXT("Open"));
+			break;
+		case EInteractMessageType::IMT_Talk:
+			OutText = FText::FromString(TEXT("Talk"));
+			break;
+		default: ;
+	}
+	return OutText;
 }
 
 void AMemoriesPlayerController::OnMoveInput(const FInputActionValue& Value)
@@ -125,11 +219,19 @@ void AMemoriesPlayerController::OnJumpEndInput(const FInputActionValue& Value)
 	}
 }
 
-void AMemoriesPlayerController::OnInteractInput(const FInputActionValue& Value)
+void AMemoriesPlayerController::OnInteractBeginInput(const FInputActionValue& Value)
 {
 	if(MemoriesCharacter.IsValid())
 	{
-		MemoriesCharacter->TryInteract();
+		MemoriesCharacter->TryBeginInteract();
+	}
+}
+
+void AMemoriesPlayerController::OnInteractEndInput(const FInputActionValue& Value)
+{
+	if(MemoriesCharacter.IsValid())
+	{
+		MemoriesCharacter->StopInteract();
 	}
 }
 

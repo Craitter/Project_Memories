@@ -3,6 +3,7 @@
 
 #include "Project_Memories/public/MemoriesCharacter.h"
 
+#include "InteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -50,6 +51,11 @@ AMemoriesCharacter::AMemoriesCharacter()
 	{
 		CameraComponent->SetupAttachment(SpringArmComponent);
 	}
+	InteractionComponent = CreateDefaultSubobject<UInteractionComponent>("InteractionComponent");
+	if(IsValid(InteractionComponent))
+	{
+		
+	}
 }
 
 void AMemoriesCharacter::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
@@ -65,7 +71,6 @@ void AMemoriesCharacter::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHei
 void AMemoriesCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -133,9 +138,20 @@ void AMemoriesCharacter::TryCrouch()
 	}
 }
 
-void AMemoriesCharacter::TryInteract()
+void AMemoriesCharacter::TryBeginInteract()
 {
-	
+	if(IsValid(InteractionComponent))
+	{
+		InteractionComponent->StartInteract();
+	}
+}
+
+void AMemoriesCharacter::StopInteract()
+{
+	if(IsValid(InteractionComponent))
+	{
+		InteractionComponent->StopInteract();
+	}
 }
 
 void AMemoriesCharacter::GetCameraPitchMinMax(float& Min, float& Max)
@@ -143,4 +159,15 @@ void AMemoriesCharacter::GetCameraPitchMinMax(float& Min, float& Max)
 	Min = ViewPitchMin;
 	Max = ViewPitchMax;
 }
+
+FVector AMemoriesCharacter::GetCameraForwardVector()
+{
+	if(IsValid(CameraComponent))
+	{
+		return CameraComponent->GetForwardVector();
+	}
+	return FVector::ZeroVector;
+}
+
+
 

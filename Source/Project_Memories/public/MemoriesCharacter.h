@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "MemoriesCharacter.generated.h"
 
+class UInteractionComponent;
+enum class EInteractMessageType : uint8;
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -17,7 +19,7 @@ class PROJECT_MEMORIES_API AMemoriesCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AMemoriesCharacter();
-
+	
 	virtual void OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
 protected:
 	// Called when the game starts or when spawned
@@ -28,6 +30,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Essential Components")
 	TObjectPtr<UCameraComponent> CameraComponent = {nullptr};
+
+	UPROPERTY(VisibleAnywhere, Category = "Essential Components")
+	TObjectPtr<UInteractionComponent> InteractionComponent = {nullptr};
 
 	//This limits the pitch rotation minimum(direction: ground) of the Camera. Default Values are "stolen"
 	UPROPERTY(EditDefaultsOnly, Category = "Camera")
@@ -50,9 +55,14 @@ public:
 	void TryStopRun();
 	bool IsRunning() const;
 	void TryCrouch();
-	void TryInteract();
+	void TryBeginInteract();
+	void StopInteract();
 	//End InputCallbacks
 	void GetCameraPitchMinMax(float& Min, float& Max);
+	FVector GetCameraForwardVector();
+
+	//Begin InteractCOmponentCalls
+	//End InteractComponentCalls
 private:
 	float InternMaxWalkSpeed = 0.0f;
 
