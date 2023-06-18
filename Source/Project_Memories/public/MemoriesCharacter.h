@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InteractableInterface.h"
 #include "GameFramework/Character.h"
 #include "MemoriesCharacter.generated.h"
 
@@ -12,7 +13,7 @@ class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class PROJECT_MEMORIES_API AMemoriesCharacter : public ACharacter
+class PROJECT_MEMORIES_API AMemoriesCharacter : public ACharacter, public IInteractableInterface
 {
 	GENERATED_BODY()
 
