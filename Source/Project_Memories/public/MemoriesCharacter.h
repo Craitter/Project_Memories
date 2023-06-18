@@ -45,6 +45,19 @@ protected:
 	//See CharacterMovement: Walking : MaxWalkSpeed for the normal speed and how it behaves
 	UPROPERTY(Category="Character Movement: Running", EditAnywhere, BlueprintReadWrite, meta=(ClampMin="0", UIMin="0", ForceUnits="cm/s"))
 	float MaxRunSpeed = 900.f;
+
+	//the time in seconds it takes to rotate to the Person talking to
+	UPROPERTY(EditDefaultsOnly)
+	float DialogueRotationTime = 1.0f;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bShouldRotateToPlayerCharacter = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bShouldRotateToInteractable = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector DialogueFacingTargetLocation = FVector::ZeroVector;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -61,11 +74,15 @@ public:
 	//End InputCallbacks
 	void GetCameraPitchMinMax(float& Min, float& Max);
 	FVector GetCameraForwardVector();
+	
+	UFUNCTION(BlueprintCallable)
+	void ResetInteractionTrace();
 
 	//Begin InteractCOmponentCalls
 	//End InteractComponentCalls
 private:
 	float InternMaxWalkSpeed = 0.0f;
+	float CurrentRotationTime = 0.0f;
 
 	bool bIsRunning = false;
 	bool bTriesToStartRunning = false;
