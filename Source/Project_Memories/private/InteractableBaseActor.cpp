@@ -11,12 +11,12 @@ AInteractableBaseActor::AInteractableBaseActor()
 
 }
 
-bool AInteractableBaseActor::IsAvailableForInteraction_Implementation(UPrimitiveComponent* InteractionComponent) const
+bool AInteractableBaseActor::IsAvailableForInteraction_Implementation(AActor* InteractingActor, UPrimitiveComponent* InteractionComponent) const
 {
 	return true;
 }
 
-FInteractMessageInformation AInteractableBaseActor::GetInteractionMessageType(
+FInteractMessageInformation AInteractableBaseActor::GetInteractionMessageType_Implementation(
 	UPrimitiveComponent* InteractionComponent) const
 {
 	return MessageInformation;

@@ -15,9 +15,9 @@ class PROJECT_MEMORIES_API AInteractableBaseActor : public AActor, public IInter
 public:	
 	// Sets default values for this actor's properties
 	AInteractableBaseActor();
-	virtual bool IsAvailableForInteraction_Implementation(UPrimitiveComponent* InteractionComponent) const override;
+	virtual bool IsAvailableForInteraction_Implementation(AActor* InteractingActor, UPrimitiveComponent* InteractionComponent) const override;
 	virtual FInteractMessageInformation
-	GetInteractionMessageType(UPrimitiveComponent* InteractionComponent) const override;
+	GetInteractionMessageType_Implementation(UPrimitiveComponent* InteractionComponent) const override;
 	virtual float GetInteractionDuration_Implementation(UPrimitiveComponent* InteractionComponent) const override;
 	virtual void
 	PreInteract_Implementation(AActor* InteractingActor, UPrimitiveComponent* InteractionComponent) override;

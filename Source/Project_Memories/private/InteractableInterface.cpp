@@ -4,12 +4,12 @@
 #include "InteractableInterface.h"
 
 // Add default functionality here for any IInteractableInterface functions that are not pure virtual.
-bool IInteractableInterface::IsAvailableForInteraction_Implementation(UPrimitiveComponent* InteractionComponent) const
+bool IInteractableInterface::IsAvailableForInteraction_Implementation(AActor* InteractingActor, UPrimitiveComponent* InteractionComponent) const
 {
 	return false;
 }
 
-FInteractMessageInformation IInteractableInterface::GetInteractionMessageType(
+FInteractMessageInformation IInteractableInterface::GetInteractionMessageType_Implementation(
 	UPrimitiveComponent* InteractionComponent) const
 {
 	return FInteractMessageInformation();

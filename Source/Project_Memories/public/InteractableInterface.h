@@ -48,10 +48,12 @@ class PROJECT_MEMORIES_API IInteractableInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
-	bool IsAvailableForInteraction(UPrimitiveComponent* InteractionComponent) const;
-	virtual bool IsAvailableForInteraction_Implementation(UPrimitiveComponent* InteractionComponent) const;
-	
-	virtual FInteractMessageInformation GetInteractionMessageType(UPrimitiveComponent* InteractionComponent) const;
+	bool IsAvailableForInteraction(AActor* InteractingActor, UPrimitiveComponent* InteractionComponent) const;
+	virtual bool IsAvailableForInteraction_Implementation(AActor* InteractingActor, UPrimitiveComponent* InteractionComponent) const;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
+	FInteractMessageInformation GetInteractionMessageType(UPrimitiveComponent* InteractionComponent) const;
+	virtual FInteractMessageInformation GetInteractionMessageType_Implementation(UPrimitiveComponent* InteractionComponent) const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
 	float GetInteractionDuration(UPrimitiveComponent* InteractionComponent) const;
