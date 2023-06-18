@@ -77,71 +77,6 @@ void AMemoriesCharacter::BeginPlay()
 void AMemoriesCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UE_LOG(LogTemp, Warning , TEXT("%s %s() Control ROtation"), *GetControlRotation().ToString() , *FString(__FUNCTION__));
-	if(bShouldRotateToPlayerCharacter)
-	{
-		if(DialogueRotationTime > CurrentRotationTime)
-		{
-			CurrentRotationTime += DeltaTime;
-			float Alpha = CurrentRotationTime / DialogueRotationTime;
-			Alpha = FMath::Clamp(Alpha, 0, 1);
-			const TWeakObjectPtr<UGameInstance> GameInstance = GetGameInstance();
-			if(GameInstance.IsValid())
-			{
-				TWeakObjectPtr<APlayerController> PlayerController = GameInstance->GetPrimaryPlayerController();
-				if(PlayerController.IsValid())
-				{
-					TWeakObjectPtr<AMemoriesCharacter> PlayerPawn = Cast<AMemoriesCharacter>(PlayerController->GetPawn());
-					if(PlayerPawn.IsValid())
-					{
-						DialogueFacingTargetLocation.Z = 0.0f;
-						FVector Temp = DialogueFacingTargetLocation - GetActorLocation();
-			
-						FRotator TargetRotation = Temp.ToOrientationRotator();
-						// TargetRotation.Yaw -= 180.0f;
-						const FRotator CurrentRotation = GetActorRotation();
-						TargetRotation.Pitch = CurrentRotation.Pitch;
-						TargetRotation.Roll = CurrentRotation.Roll;
-						// TargetForward = TargetForward - CurrentRotation;
-						SetActorRotation(FMath::Lerp(CurrentRotation, TargetRotation, Alpha));
-					}
-				}
-			}
-		}
-		else
-		{
-			CurrentRotationTime = 0.0f;
-			bShouldRotateToPlayerCharacter = false;
-		}
-	}
-
-	if(bShouldRotateToInteractable)
-	{
-		if(DialogueRotationTime > CurrentRotationTime)
-		{
-			CurrentRotationTime += DeltaTime;
-			float Alpha = CurrentRotationTime / DialogueRotationTime;
-			Alpha = FMath::Clamp(Alpha, 0, 1);
-			
-			DialogueFacingTargetLocation.Z = 0.0f;
-			FVector Temp = DialogueFacingTargetLocation - GetActorLocation();
-			
-			FRotator TargetRotation = Temp.ToOrientationRotator();
-			
-			
-			
-			const FRotator CurrentRotation = GetActorRotation();
-			TargetRotation.Pitch = CurrentRotation.Pitch;
-			TargetRotation.Roll = CurrentRotation.Roll;
-			SetActorRotation(FMath::Lerp(CurrentRotation, TargetRotation, Alpha));
-				
-		}
-		else
-		{
-			CurrentRotationTime = 0.0f;
-			bShouldRotateToInteractable = false;
-		}
-	}
 
 }
 
@@ -232,14 +167,6 @@ FVector AMemoriesCharacter::GetCameraForwardVector()
 		return CameraComponent->GetForwardVector();
 	}
 	return FVector::ZeroVector;
-}
-
-void AMemoriesCharacter::ResetInteractionTrace()
-{
-	if(IsValid(InteractionComponent))
-	{
-		InteractionComponent->ResetInteraction();
-	}
 }
 
 

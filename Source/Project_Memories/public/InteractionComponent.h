@@ -62,8 +62,6 @@ public:
 
 	void StopInteract();
 
-	void ResetInteraction();
-
 private:
 	FTimerHandle InteractionTraceTimerHandle;
 	FTimerHandle InteractDurationTimerHandle;

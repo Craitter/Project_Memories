@@ -57,7 +57,7 @@ void UInteractionComponent::InteractableFound(FHitResult InteractableHit)
 	else
 	{
 		bool BroadcastNewTarget = true;
-		if(CachedHit.GetActor() == InteractableHit.GetActor() && CachedHit.GetComponent() == InteractableHit.GetComponent())
+		if(CachedHit.GetActor() == InteractableHit.GetActor())
 		{
 			BroadcastNewTarget = false;
 			
@@ -78,7 +78,7 @@ void UInteractionComponent::InteractableFound(FHitResult InteractableHit)
 			{
 				return;
 			}
-			const FInteractMessageInformation MessageInformation = III->Execute_GetInteractionMessageType(InteractableHit.GetActor(), InteractableHit.GetComponent());
+			const FInteractMessageInformation MessageInformation = III->GetInteractionMessageType(InteractableHit.GetComponent());
 			const float InteractDuration = III->Execute_GetInteractionDuration(InteractableHit.GetActor(), InteractableHit.GetComponent());
 			
 			bHasInteractableTarget = true;
@@ -151,7 +151,7 @@ void UInteractionComponent::PerformTrace()
 				{
 					const bool bIsInteractable = Hit.GetActor()->Implements<UInteractableInterface>();
 
-					if(bIsInteractable && IInteractableInterface::Execute_IsAvailableForInteraction(Hit.GetActor(), GetOwner(), Hit.Component.Get()))
+					if(bIsInteractable && IInteractableInterface::Execute_IsAvailableForInteraction(Hit.GetActor(), Hit.Component.Get()))
 					{
 						//if no response we can cast
 						OutResult = Hit;
@@ -164,7 +164,6 @@ void UInteractionComponent::PerformTrace()
 			if(Hit.bBlockingHit)
 			{
 				OutResult = Hit; //Todo: Make this work cause there will be no blocking hit
-				OutResult.bBlockingHit = false;
 			}
 		}
 
@@ -203,7 +202,7 @@ void UInteractionComponent::PerformTrace()
 					{
 						const bool bIsInteractable = Hit.GetActor()->Implements<UInteractableInterface>();
 
-						if(bIsInteractable && IInteractableInterface::Execute_IsAvailableForInteraction(Hit.GetActor(), GetOwner(), Hit.Component.Get()))
+						if(bIsInteractable && IInteractableInterface::Execute_IsAvailableForInteraction(Hit.GetActor(), Hit.Component.Get()))
 						{
 							//if no response we can cast
 							OutResult = Hit;
@@ -216,7 +215,6 @@ void UInteractionComponent::PerformTrace()
 				if(Hit.bBlockingHit)
 				{
 					OutResult = Hit; //Todo: Make this work cause there will be no blocking hit
-					OutResult.bBlockingHit = false;
 				}
 			}
 #if ENABLE_DRAW_DEBUG
@@ -229,7 +227,7 @@ void UInteractionComponent::PerformTrace()
 				}
 				else
 				{
-					DrawDebugSphere(World.Get(), InEndLocation, SphereRadius, 16, FColor::Green, false, LoopTime);
+					DrawDebugSphere(World.Get(), InEndLocation, SphereRadius / 5, 16, FColor::Green, false, LoopTime);
 				}
 			}
 #endif // ENABLE_DRAW_DEBUG
@@ -261,12 +259,12 @@ void UInteractionComponent::StartInteract()
 		bIsInteracting = false;
 		return;
 	}
-	if(!III->Execute_IsAvailableForInteraction(CachedHit.GetActor(), GetOwner(), CachedHit.GetComponent()))
+	if(!III->Execute_IsAvailableForInteraction(CachedHit.GetActor(), CachedHit.GetComponent()))
 	{
 		bIsInteracting = false;
 		return;
 	}
-	III->Execute_PreInteract(CachedHit.GetActor(), GetOwner(), CachedHit.GetComponent());
+	III->Execute_PreInteract(CachedHit.GetActor(), CachedHit.GetActor(), CachedHit.GetComponent());
 	const float InteractDuration = III->Execute_GetInteractionDuration(CachedHit.GetActor(), CachedHit.GetComponent());
 	if(InteractDuration > 0)
 	{
@@ -309,11 +307,6 @@ void UInteractionComponent::StopInteract()
 	
 }
 
-void UInteractionComponent::ResetInteraction()
-{
-	CachedHit.Reset();
-}
-
 
 void UInteractionComponent::FinishInteract()
 {
@@ -324,7 +317,7 @@ void UInteractionComponent::FinishInteract()
 		bIsInteracting = false;
 		return;
 	}
-	III->Execute_PostInteract(CachedHit.GetActor(), GetOwner(), CachedHit.GetComponent());
+	III->Execute_PostInteract(CachedHit.GetActor(), CachedHit.GetActor(), CachedHit.GetComponent());
 	if(OnInteractionFinished.IsBound())
 	{
 		OnInteractionFinished.Execute();
