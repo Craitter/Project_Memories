@@ -22,7 +22,7 @@ void AMemoriesPlayerController::BeginPlay()
 			Subsystem->AddMappingContext(IMC_Default_MK.LoadSynchronous(), 0);
 		}
 	}
-
+	
 	if(GameOverlayClass != nullptr)
 	{
 		GameOverlayWidget = CreateWidget<UGameOverlayWidget>(this ,GameOverlayClass);
