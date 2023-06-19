@@ -21,13 +21,20 @@ public:
 	// Sets default values for this actor's properties
 	ALightSourceAndTargtetActor();
 
+	virtual FInteractMessageInformation GetInteractionMessageType_Implementation(UPrimitiveComponent* InteractionComponent) const override;
+	
 	virtual bool IsAvailableForInteraction_Implementation(AActor* InteractingActor, UPrimitiveComponent* InteractionComponent) const override;
 
 	virtual void PostInteract_Implementation(AActor* InteractingActor, UPrimitiveComponent* InteractionComponent) override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
+
+	UPROPERTY(VisibleAnywhere, Category = "LightSource")
+	TObjectPtr<UStaticMeshComponent> RootMesh = {nullptr};
+
+	UPROPERTY(VisibleAnywhere, Category = "LightSource")
+	TObjectPtr<UStaticMeshComponent> SpotLightRoot = {nullptr};
 	
 	UPROPERTY(VisibleAnywhere, Category = "LightSource")
 	TObjectPtr<UStaticMeshComponent> RotatingMesh = {nullptr};
@@ -59,6 +66,9 @@ private:
 
 	TArray<TWeakObjectPtr<ARedirectActor>> RedirectActors;
 
+	UPROPERTY(EditAnywhere)
+	FInteractMessageInformation MessageInformation;
+	
 	void ActivateLight();
 	void DeactivateLight();
 public:	
