@@ -15,26 +15,45 @@ ALightSourceAndTargtetActor::ALightSourceAndTargtetActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	RootMesh = CreateDefaultSubobject<UStaticMeshComponent>("RootMesh");
+	if(IsValid(RootMesh))
+	{
+		SetRootComponent(RootMesh);
+	}
 
 	RotatingMesh = CreateDefaultSubobject<UStaticMeshComponent>("RotatingMesh");
 	if(IsValid(RotatingMesh))
 	{
-		SetRootComponent(RotatingMesh);
+		RotatingMesh->SetupAttachment(RootMesh);
 		RotatingMesh->Mobility = EComponentMobility::Movable;
 		RotatingMesh->SetCollisionResponseToChannel(COLLISION_INTERACTABLE, ECR_Overlap);
 	}
+
+
+	SpotLightRoot = CreateDefaultSubobject<UStaticMeshComponent>("SpotlightRoot");
+	if(IsValid(SpotLightRoot))
+	{
+		SpotLightRoot->SetupAttachment(RotatingMesh);
+	}
+	
 	SpotLightComponent = CreateDefaultSubobject<USpotLightComponent>("SpotLight");
 	if(IsValid(SpotLightComponent))
 	{
-		SpotLightComponent->SetupAttachment(RotatingMesh);
+		SpotLightComponent->SetupAttachment(SpotLightRoot);
 		SpotLightComponent->bCastDeepShadow = false;
 		SpotLightComponent->SetCastShadows(false);
 	}
 	
 }
 
-bool ALightSourceAndTargtetActor::IsAvailableForInteraction_Implementation(AActor* InteractingActor,
+FInteractMessageInformation ALightSourceAndTargtetActor::GetInteractionMessageType_Implementation(
 	UPrimitiveComponent* InteractionComponent) const
+{
+	return MessageInformation;
+}
+
+bool ALightSourceAndTargtetActor::IsAvailableForInteraction_Implementation(AActor* InteractingActor,
+                                                                           UPrimitiveComponent* InteractionComponent) const
 {
 	return !bIsFinished;
 }
