@@ -7,6 +7,8 @@
 #include "InteractableInterface.generated.h"
 
 
+DECLARE_MULTICAST_DELEGATE(FOnInteractionFinishedDelegate);
+
 UENUM(BlueprintType)
 enum class EInteractMessageType : uint8
 {
@@ -70,4 +72,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
 	void CancelInteraction(UPrimitiveComponent* InteractionComponent);
 	virtual void CancelInteraction_Implementation(UPrimitiveComponent* InteractionComponent) {};
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
+	bool HasInteractionStateChanged(UPrimitiveComponent* InteractionComponent);
+	virtual bool HasInteractionStateChanged_Implementation(UPrimitiveComponent* InteractionComponent);
+	
 };

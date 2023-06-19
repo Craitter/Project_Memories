@@ -77,7 +77,6 @@ void AMemoriesCharacter::BeginPlay()
 void AMemoriesCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UE_LOG(LogTemp, Warning , TEXT("%s %s() Control ROtation"), *GetControlRotation().ToString() , *FString(__FUNCTION__));
 	if(bShouldRotateToPlayerCharacter)
 	{
 		if(DialogueRotationTime > CurrentRotationTime)

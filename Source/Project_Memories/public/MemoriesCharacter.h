@@ -22,6 +22,12 @@ public:
 	AMemoriesCharacter();
 	
 	virtual void OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bShouldRotateToInteractable = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	FVector DialogueFacingTargetLocation = FVector::ZeroVector;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -53,11 +59,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	bool bShouldRotateToPlayerCharacter = false;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool bShouldRotateToInteractable = false;
 
-	UPROPERTY(BlueprintReadWrite)
-	FVector DialogueFacingTargetLocation = FVector::ZeroVector;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

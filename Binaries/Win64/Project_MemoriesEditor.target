@@ -94,6 +94,26 @@
 			"Type": "RequiredResource"
 		},
 		{
+			"Path": "$(ProjectDir)/Plugins/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystem.dll",
+			"Type": "DynamicLibrary"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystem.pdb",
+			"Type": "SymbolFile"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystemEditor.dll",
+			"Type": "DynamicLibrary"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystemEditor.pdb",
+			"Type": "SymbolFile"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/MounteaDialogueSystem/Binaries/Win64/UnrealEditor.modules",
+			"Type": "RequiredResource"
+		},
+		{
 			"Path": "$(EngineDir)/Binaries/Win64/AgentInterface.dll",
 			"Type": "RequiredResource"
 		},
@@ -4870,26 +4890,6 @@
 			"Type": "RequiredResource"
 		},
 		{
-			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystem.dll",
-			"Type": "DynamicLibrary"
-		},
-		{
-			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystem.pdb",
-			"Type": "SymbolFile"
-		},
-		{
-			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystemEditor.dll",
-			"Type": "DynamicLibrary"
-		},
-		{
-			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/Binaries/Win64/UnrealEditor-MounteaDialogueSystemEditor.pdb",
-			"Type": "SymbolFile"
-		},
-		{
-			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/Binaries/Win64/UnrealEditor.modules",
-			"Type": "RequiredResource"
-		},
-		{
 			"Path": "$(EngineDir)/Plugins/Media/AndroidMedia/Binaries/Win64/UnrealEditor-AndroidMediaEditor.dll",
 			"Type": "DynamicLibrary"
 		},
@@ -6017,6 +6017,10 @@
 	"RuntimeDependencies": [
 		{
 			"Path": "$(ProjectDir)/Plugins/Developer/RiderLink/RiderLink.uplugin",
+			"Type": "UFS"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/MounteaDialogueSystem/MounteaDialogueSystem.uplugin",
 			"Type": "UFS"
 		},
 		{
@@ -26869,10 +26873,6 @@
 		},
 		{
 			"Path": "$(EngineDir)/Plugins/Interchange/Runtime/Interchange.uplugin",
-			"Type": "UFS"
-		},
-		{
-			"Path": "$(EngineDir)/Plugins/Marketplace/MounteaDialogueSystem/MounteaDialogueSystem.uplugin",
 			"Type": "UFS"
 		},
 		{

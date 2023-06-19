@@ -19,3 +19,8 @@ float IInteractableInterface::GetInteractionDuration_Implementation(UPrimitiveCo
 {
 	return 0.0f;
 }
+
+bool IInteractableInterface::HasInteractionStateChanged_Implementation(UPrimitiveComponent* InteractionComponent)
+{
+	return false;
+}

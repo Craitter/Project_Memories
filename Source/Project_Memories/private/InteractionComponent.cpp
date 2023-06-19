@@ -56,8 +56,13 @@ void UInteractionComponent::InteractableFound(FHitResult InteractableHit)
 	}
 	else
 	{
+		const IInteractableInterface* III = Cast<IInteractableInterface>(InteractableHit.GetActor());
+
+		
+		
 		bool BroadcastNewTarget = true;
-		if(CachedHit.GetActor() == InteractableHit.GetActor() && CachedHit.GetComponent() == InteractableHit.GetComponent())
+		if(CachedHit.GetActor() == InteractableHit.GetActor() && CachedHit.GetComponent() == InteractableHit.GetComponent() &&
+			III && !III->Execute_HasInteractionStateChanged(InteractableHit.GetActor(), InteractableHit.GetComponent()))
 		{
 			BroadcastNewTarget = false;
 			
@@ -73,11 +78,11 @@ void UInteractionComponent::InteractableFound(FHitResult InteractableHit)
 		}
 		if(BroadcastNewTarget)
 		{
-			const IInteractableInterface* III = Cast<IInteractableInterface>(InteractableHit.GetActor());
 			if(III == nullptr)
 			{
 				return;
 			}
+			
 			const FInteractMessageInformation MessageInformation = III->Execute_GetInteractionMessageType(InteractableHit.GetActor(), InteractableHit.GetComponent());
 			const float InteractDuration = III->Execute_GetInteractionDuration(InteractableHit.GetActor(), InteractableHit.GetComponent());
 			
@@ -267,6 +272,11 @@ void UInteractionComponent::StartInteract()
 		return;
 	}
 	III->Execute_PreInteract(CachedHit.GetActor(), GetOwner(), CachedHit.GetComponent());
+	if(OwningCharacter.IsValid())
+	{
+		OwningCharacter->bShouldRotateToInteractable = true;
+		OwningCharacter->DialogueFacingTargetLocation = CachedHit.GetActor()->GetActorLocation();
+	}
 	const float InteractDuration = III->Execute_GetInteractionDuration(CachedHit.GetActor(), CachedHit.GetComponent());
 	if(InteractDuration > 0)
 	{
