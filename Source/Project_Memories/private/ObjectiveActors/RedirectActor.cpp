@@ -14,8 +14,6 @@ ARedirectActor::ARedirectActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	
-	
 	RotatingMesh = CreateDefaultSubobject<UStaticMeshComponent>("RotatingMesh");
 	if(IsValid(RotatingMesh))
 	{
@@ -35,24 +33,8 @@ ARedirectActor::ARedirectActor()
 
 }
 
-bool ARedirectActor::HasInteractionStateChanged_Implementation(UPrimitiveComponent* InteractionComponent)
-{
-	if(StateChanged)
-	{
-		StateChanged = false;
-		return true;
-	}
-	return false;
-}
-
-FInteractMessageInformation ARedirectActor::GetInteractionMessageType_Implementation(
-	UPrimitiveComponent* InteractionComponent) const
-{
-	return MessageInfo;
-}
-
 bool ARedirectActor::IsAvailableForInteraction_Implementation(AActor* InteractingActor,
-                                                              UPrimitiveComponent* InteractionComponent) const
+	UPrimitiveComponent* InteractionComponent) const
 {
 	if(bIsFinished)
 	{
@@ -97,7 +79,6 @@ void ARedirectActor::Tick(float DeltaTime)
 			}
 			else
 			{
-				StateChanged = true;
 				ActivateLight(CachedIntensity);
 				bShouldRotate = false;
 				CurrentRotationTime = 0.0f;
@@ -121,7 +102,7 @@ void ARedirectActor::RedirectLight(TArray<TWeakObjectPtr<ARedirectActor>>& Redir
 				RedirectActors.AddUnique(this);
 				UpdateSpotLight(SourceSpotLight);
 				UniqueLightSources.AddUnique(SourceActor);
-				ActivateLight(SourceSpotLight->Intensity);
+				ActivateLight(SpotLightComponent->Intensity);
 				const FVector StartLocation = SpotLightComponent->GetComponentLocation();
 				const FVector EndLocation = StartLocation + (SpotLightComponent->GetForwardVector() * TraceRange);
 				FCollisionShape Sphere;
@@ -153,7 +134,6 @@ void ARedirectActor::RedirectLight(TArray<TWeakObjectPtr<ARedirectActor>>& Redir
 						}
 						else if(ARedirectActor* Redirector = Cast<ARedirectActor>(Hit.GetActor()))
 						{
-
 							RedirectActors.Empty();
 							Redirector->RedirectLight(RedirectActors, TargetTriggerVolume, SourceActor,
 													  SpotLightComponent, bDebug, TraceRange);
@@ -176,7 +156,7 @@ void ARedirectActor::ActivateLight(float NewIntensity)
 {
 	if(SpotLightComponent != nullptr)
 	{
-		SpotLightComponent->SetIntensity(NewIntensity);
+		SpotLightComponent->SetIntensity(CachedIntensity);
 	}
 }
 

@@ -20,9 +20,6 @@ public:
 	// Sets default values for this actor's properties
 	ARedirectActor();
 
-	
-	virtual bool HasInteractionStateChanged_Implementation(UPrimitiveComponent* InteractionComponent) override;
-	virtual FInteractMessageInformation GetInteractionMessageType_Implementation(UPrimitiveComponent* InteractionComponent) const override;
 	virtual bool IsAvailableForInteraction_Implementation(AActor* InteractingActor, UPrimitiveComponent* InteractionComponent) const override;
 	virtual void PostInteract_Implementation(AActor* InteractingActor, UPrimitiveComponent* InteractionComponent) override;
 protected:
@@ -52,9 +49,6 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USpotLightComponent> SpotLightComponent = {nullptr};
 
-	UPROPERTY(EditAnywhere)
-	FInteractMessageInformation MessageInfo;
-
 	void RemoveSourceLight(TWeakObjectPtr<ALightSourceAndTargtetActor> InSource);
 private:
 
@@ -62,7 +56,7 @@ private:
 	void DeactivateLight();
 	void UpdateSpotLight(TWeakObjectPtr<USpotLightComponent> InSpotLight);
 	
-	bool StateChanged = false;
+
 	float CachedIntensity = 0.0f;
 	float CurrentRotationTime = 0.0f;
 	bool bIsFinished = false;
