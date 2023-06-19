@@ -22,7 +22,7 @@ AMemoriesCharacter::AMemoriesCharacter()
 	const TWeakObjectPtr<UCharacterMovementComponent> MovementComponent = GetCharacterMovement();
 	if(MovementComponent.IsValid())
 	{
-		InternMaxWalkSpeed = MovementComponent->MaxWalkSpeed;
+		
 		MovementComponent->NavAgentProps.bCanCrouch = true;
 		MovementComponent->NavAgentProps.bCanJump = true;
 		MovementComponent->NavAgentProps.bCanWalk = true;
@@ -71,6 +71,11 @@ void AMemoriesCharacter::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHei
 void AMemoriesCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	const TWeakObjectPtr<UCharacterMovementComponent> MovementComponent = GetCharacterMovement();
+	if(MovementComponent.IsValid())
+	{
+		InternMaxWalkSpeed = MovementComponent->MaxWalkSpeed;
+	}
 }
 
 // Called every frame
