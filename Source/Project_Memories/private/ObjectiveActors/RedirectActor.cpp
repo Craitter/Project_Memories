@@ -111,13 +111,20 @@ void ARedirectActor::RedirectLight(TArray<TWeakObjectPtr<ARedirectActor>>& Redir
 	TWeakObjectPtr<ATriggerVolume> TargetTriggerVolume, TWeakObjectPtr<ALightSourceAndTargtetActor> SourceActor,
 	TWeakObjectPtr<USpotLightComponent> SourceSpotLight, bool bDebug, float TraceRange)
 {
-
+	UE_LOG(LogTemp, Warning , TEXT("%s %s() "), *GetName(), *FString(__FUNCTION__));
 	if(!bIsFinished)
 	{
 		if(!bShouldRotate)
 		{
 			if(SpotLightComponent != nullptr)
 			{
+				for(auto TempRedirector : RedirectActors)
+				{
+					if(TempRedirector->GetName().Equals(GetName()))
+					{
+						return;
+					}
+				}
 				RedirectActors.AddUnique(this);
 				UpdateSpotLight(SourceSpotLight);
 				UniqueLightSources.AddUnique(SourceActor);
@@ -153,8 +160,7 @@ void ARedirectActor::RedirectLight(TArray<TWeakObjectPtr<ARedirectActor>>& Redir
 						}
 						else if(ARedirectActor* Redirector = Cast<ARedirectActor>(Hit.GetActor()))
 						{
-
-							RedirectActors.Empty();
+							
 							Redirector->RedirectLight(RedirectActors, TargetTriggerVolume, SourceActor,
 													  SpotLightComponent, bDebug, TraceRange);
 						}
@@ -172,7 +178,7 @@ void ARedirectActor::SourceFinished(TWeakObjectPtr<USpotLightComponent> SourceSp
 	UpdateSpotLight(SourceSpotLight);
 }
 
-void ARedirectActor::ActivateLight(float NewIntensity)
+void ARedirectActor::ActivateLight(float NewIntensity) const
 {
 	if(SpotLightComponent != nullptr)
 	{

@@ -6,6 +6,7 @@
 
 #include "MemoriesCharacter.h"
 #include "Engine/TriggerVolume.h"
+#include "Project_Memories/Project_Memories.h"
 
 // Sets default values
 AMovableActor::AMovableActor()
@@ -17,6 +18,7 @@ AMovableActor::AMovableActor()
 	if(IsValid(TargetObjective))
 	{
 		SetRootComponent(TargetObjective);
+		TargetObjective->SetCollisionResponseToChannel(COLLISION_INTERACTABLE, ECR_Overlap);
 	}
 }
 

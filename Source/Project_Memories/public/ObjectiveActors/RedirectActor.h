@@ -58,7 +58,7 @@ public:
 	void RemoveSourceLight(TWeakObjectPtr<ALightSourceAndTargtetActor> InSource);
 private:
 
-	void ActivateLight(float NewIntensity);
+	void ActivateLight(float NewIntensity) const;
 	void DeactivateLight();
 	void UpdateSpotLight(TWeakObjectPtr<USpotLightComponent> InSpotLight);
 	
