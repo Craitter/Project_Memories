@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "TorchBasin.generated.h"
 
+
+class UNiagaraComponent;
 UCLASS()
 class PROJECT_MEMORIES_API ATorchBasin : public AActor, public IInteractableInterface
 {
@@ -29,7 +31,8 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> Mesh = {nullptr};
 	
-	//Todo:Niagara or Particles
+	UPROPERTY(VisibleAnywhere, Category = "Essential Components")
+	TObjectPtr<UNiagaraComponent> NiagaraComponent = {nullptr};
 
 	
 	UPROPERTY(EditAnywhere)

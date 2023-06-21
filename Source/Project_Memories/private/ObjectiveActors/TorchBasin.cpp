@@ -4,6 +4,7 @@
 #include "ObjectiveActors/TorchBasin.h"
 
 #include "MemoriesCharacter.h"
+#include "NiagaraComponent.h"
 #include "Project_Memories/Project_Memories.h"
 
 // Sets default values
@@ -18,6 +19,11 @@ ATorchBasin::ATorchBasin()
 	{
 		SetRootComponent(Mesh);
 		Mesh->SetCollisionResponseToChannel(COLLISION_INTERACTABLE, ECR_Overlap);
+	}
+	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("NiagaraComponent");
+	if(IsValid(NiagaraComponent))
+	{
+		NiagaraComponent->SetupAttachment(Mesh);
 	}
 }
 
@@ -44,12 +50,20 @@ FInteractMessageInformation ATorchBasin::GetInteractionMessageType_Implementatio
 void ATorchBasin::PostInteract_Implementation(AActor* InteractingActor, UPrimitiveComponent* InteractionComponent)
 {
 	bIsIgnited = true;
+	if(IsValid(NiagaraComponent))
+	{
+		NiagaraComponent->Activate();
+	}
 }
 
 // Called when the game starts or when spawned
 void ATorchBasin::BeginPlay()
 {
 	Super::BeginPlay();
+	if(IsValid(NiagaraComponent))
+	{
+		NiagaraComponent->Deactivate();
+	}
 	
 }
 

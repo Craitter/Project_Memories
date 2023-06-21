@@ -4,9 +4,13 @@
 #include "Project_Memories/public/MemoriesCharacter.h"
 
 #include "InteractionComponent.h"
+#include "NiagaraComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/MounteaDialogueParticipant.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "ObjectiveActors/FastSwappingTextActor.h"
+#include "Project_Memories/Project_Memories.h"
 
 // Sets default values
 AMemoriesCharacter::AMemoriesCharacter()
@@ -56,6 +60,24 @@ AMemoriesCharacter::AMemoriesCharacter()
 	{
 		
 	}
+
+	Torch = CreateDefaultSubobject<UStaticMeshComponent>("Torch");
+	if(IsValid(Torch))
+	{
+		Torch->SetupAttachment(GetMesh(), "righthandsocket");
+	}
+
+	TorchDecoration = CreateDefaultSubobject<UStaticMeshComponent>("TorchDecoration");
+	if(IsValid(TorchDecoration))
+	{
+		TorchDecoration->SetupAttachment(Torch);
+	}
+
+	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("FireEffect");
+	if(IsValid(NiagaraComponent))
+	{
+		NiagaraComponent->SetupAttachment(Torch);
+	}
 }
 
 void AMemoriesCharacter::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
@@ -75,6 +97,17 @@ void AMemoriesCharacter::BeginPlay()
 	if(MovementComponent.IsValid())
 	{
 		InternMaxWalkSpeed = MovementComponent->MaxWalkSpeed;
+	}
+	if(IsValid(NiagaraComponent) && IsValid(Torch) && IsValid(TorchDecoration))
+	{
+		TorchDecoration->SetVisibility(false);
+		Torch->SetVisibility(false);
+		NiagaraComponent->Deactivate();
+	}
+	const TWeakObjectPtr<USkeletalMeshComponent> TEmpMesh = GetMesh();
+	if(TEmpMesh.IsValid())
+	{
+		TEmpMesh->SetCollisionResponseToChannel(COLLISION_INTERACTABLE, ECR_Overlap);
 	}
 }
 
@@ -246,10 +279,28 @@ void AMemoriesCharacter::ResetInteractionTrace()
 	}
 }
 
+void AMemoriesCharacter::ClearFastText()
+{
+	if(TextToVanishAfterDialogue != nullptr)
+	{
+		TextToVanishAfterDialogue->Destroy();
+	}
+}
+
 void AMemoriesCharacter::EnableTorch()
 {
 	bHasTorch = true;
-	//Todo: add it to the rig;
+	if(IsValid(NiagaraComponent) && IsValid(Torch) && IsValid(TorchDecoration))
+	{
+		TorchDecoration->SetVisibility(true);
+		Torch->SetVisibility(true);
+		NiagaraComponent->Activate();
+		UMounteaDialogueParticipant* Participant = FindComponentByClass<UMounteaDialogueParticipant>();
+		if(IsValid(Participant))
+		{
+			Participant->SetParticipantState(EDialogueParticipantState::EDPS_Disabled);
+		}
+	}
 }
 
 bool AMemoriesCharacter::IsTorchEnabled() const

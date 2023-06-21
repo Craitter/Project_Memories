@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "InteractableInterface.h"
+#include "NiagaraActions.h"
 #include "GameFramework/Character.h"
 #include "MemoriesCharacter.generated.h"
 
+class AFastSwappingTextActor;
 class UInteractionComponent;
 enum class EInteractMessageType : uint8;
 class UCameraComponent;
@@ -41,6 +43,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Essential Components")
 	TObjectPtr<UInteractionComponent> InteractionComponent = {nullptr};
 
+	UPROPERTY(VisibleAnywhere, Category = "Essential Components")
+	TObjectPtr<UStaticMeshComponent> Torch = {nullptr};
+	UPROPERTY(VisibleAnywhere, Category = "Essential Components")
+	TObjectPtr<UStaticMeshComponent> TorchDecoration = {nullptr};
+
+	UPROPERTY(VisibleAnywhere, Category = "Essential Components")
+	TObjectPtr<UNiagaraComponent> NiagaraComponent = {nullptr};
 	//This limits the pitch rotation minimum(direction: ground) of the Camera. Default Values are "stolen"
 	UPROPERTY(EditDefaultsOnly, Category = "Camera")
 	float ViewPitchMin = -80.0f;
@@ -81,11 +90,17 @@ public:
 	void ResetInteractionTrace();
 
 	UFUNCTION(BlueprintCallable)
+	void ClearFastText();
+	
+	UFUNCTION(BlueprintCallable)
 	void EnableTorch();
 
 	bool IsTorchEnabled() const;
 	//Begin InteractCOmponentCalls
 	//End InteractComponentCalls
+
+	UPROPERTY(EditInstanceOnly)
+	TObjectPtr<AFastSwappingTextActor> TextToVanishAfterDialogue = {nullptr};
 private:
 	float InternMaxWalkSpeed = 0.0f;
 	float CurrentRotationTime = 0.0f;
