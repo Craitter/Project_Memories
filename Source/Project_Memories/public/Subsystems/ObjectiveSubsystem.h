@@ -3,12 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ObjectiveActors/ObjectiveClock.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "ObjectiveSubsystem.generated.h"
 
 /**
  * 
  */
+
+class AObjectiveClock;
 
 UENUM()
 enum class EObjectiveType
@@ -27,5 +30,22 @@ UCLASS()
 class PROJECT_MEMORIES_API UObjectiveSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
+
+public:
+
 	
+	void TrackClock(TWeakObjectPtr<AObjectiveClock> InClock, bool bIsLeading);
+
+	void SetClockSyncRequestDelegate(FSyncRequestDelegate& SyncDelegate);
+
+	void OnSyncRequest(FRotator TargetRotation, float Tolerance);
+
+private:
+	//Clock Begin
+	TArray<TWeakObjectPtr<AObjectiveClock>> ListeningClocks;
+	TWeakObjectPtr<AObjectiveClock> LeadingClock;
+
+	TMap<EObjectiveType, bool> ObjectiveTracker;
+
+	//ClockEnd;
 };
