@@ -246,5 +246,16 @@ void AMemoriesCharacter::ResetInteractionTrace()
 	}
 }
 
+void AMemoriesCharacter::EnableTorch()
+{
+	bHasTorch = true;
+	//Todo: add it to the rig;
+}
+
+bool AMemoriesCharacter::IsTorchEnabled() const
+{
+	return bHasTorch;
+}
+
 
 

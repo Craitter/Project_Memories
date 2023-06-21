@@ -80,6 +80,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ResetInteractionTrace();
 
+	UFUNCTION(BlueprintCallable)
+	void EnableTorch();
+
+	bool IsTorchEnabled() const;
 	//Begin InteractCOmponentCalls
 	//End InteractComponentCalls
 private:
@@ -88,4 +92,6 @@ private:
 
 	bool bIsRunning = false;
 	bool bTriesToStartRunning = false;
+
+	bool bHasTorch = false;
 };
