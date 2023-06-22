@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "MemoriesCharacter.generated.h"
 
+class USoundCue;
 class AFastSwappingTextActor;
 class UInteractionComponent;
 enum class EInteractMessageType : uint8;
@@ -68,7 +69,11 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	bool bShouldRotateToPlayerCharacter = false;
 
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TObjectPtr<UAudioComponent> ClockTicking;
+	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAudioComponent> FootStep;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -91,6 +96,20 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ClearFastText();
+
+	UPROPERTY(BlueprintReadWrite)
+	TObjectPtr<UAudioComponent> PlayingSound = {nullptr};
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bPlaySadAnimation = false;
+	
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsInteractable = true;
+
+	void StopClockTicking();
+	
+	UFUNCTION(BlueprintCallable)
+	void StopMusic();
 	
 	UFUNCTION(BlueprintCallable)
 	void EnableTorch();

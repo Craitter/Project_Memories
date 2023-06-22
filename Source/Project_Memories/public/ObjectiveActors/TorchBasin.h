@@ -8,7 +8,9 @@
 #include "TorchBasin.generated.h"
 
 
+class ALevelSequenceActor;
 class UNiagaraComponent;
+class UObjectiveSubsystem;
 UCLASS()
 class PROJECT_MEMORIES_API ATorchBasin : public AActor, public IInteractableInterface
 {
@@ -34,12 +36,18 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Essential Components")
 	TObjectPtr<UNiagaraComponent> NiagaraComponent = {nullptr};
 
+	UPROPERTY(EditInstanceOnly)
+	TObjectPtr<ALevelSequenceActor> SequenceActor;
 	
 	UPROPERTY(EditAnywhere)
 	FInteractMessageInformation IgniteMessageInfo;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void OnSequenceFinished();
 private:
 	bool bIsIgnited = false;
+	TWeakObjectPtr<UObjectiveSubsystem> ObjectiveSubsystem = {nullptr};
 };

@@ -7,6 +7,7 @@
 #include "Engine/TriggerVolume.h"
 #include "ObjectiveActors/LightSourceAndTargtetActor.h"
 #include "Project_Memories/Project_Memories.h"
+#include "Subsystems/ObjectiveSubsystem.h"
 
 // Sets default values
 ARedirectActor::ARedirectActor()
@@ -54,13 +55,13 @@ FInteractMessageInformation ARedirectActor::GetInteractionMessageType_Implementa
 bool ARedirectActor::IsAvailableForInteraction_Implementation(AActor* InteractingActor,
                                                               UPrimitiveComponent* InteractionComponent) const
 {
-	if(bIsFinished)
+	if(bIsFinished || bShouldRotate)
 	{
 		return false;
 	}
 	else
 	{
-		return !bShouldRotate;
+		return ObjectiveSubsystem->IsInteractable;
 	}
 }
 
@@ -77,7 +78,7 @@ void ARedirectActor::PostInteract_Implementation(AActor* InteractingActor, UPrim
 void ARedirectActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	ObjectiveSubsystem = GetWorld()->GetSubsystem<UObjectiveSubsystem>();
 }
 
 // Called every frame

@@ -8,6 +8,7 @@
 #include "Engine/TriggerVolume.h"
 #include "ObjectiveActors/RedirectActor.h"
 #include "Project_Memories/Project_Memories.h"
+#include "Subsystems/ObjectiveSubsystem.h"
 
 // Sets default values
 ALightSourceAndTargtetActor::ALightSourceAndTargtetActor()
@@ -55,7 +56,15 @@ FInteractMessageInformation ALightSourceAndTargtetActor::GetInteractionMessageTy
 bool ALightSourceAndTargtetActor::IsAvailableForInteraction_Implementation(AActor* InteractingActor,
                                                                            UPrimitiveComponent* InteractionComponent) const
 {
-	return !bIsFinished;
+	if(bIsFinished)
+	{
+		return false;
+	}
+	else
+	{
+		if(ObjectiveSubsystem.IsValid()) return ObjectiveSubsystem->IsInteractable;
+		return false;
+	}
 }
 
 void ALightSourceAndTargtetActor::PostInteract_Implementation(AActor* InteractingActor,
@@ -89,6 +98,11 @@ void ALightSourceAndTargtetActor::BeginPlay()
 		{
 			PrimitiveComponent->SetCollisionResponseToChannel(COLLISION_LIGHT_DIRECTOR, ECR_Block);
 		}
+	}
+	ObjectiveSubsystem = GetWorld()->GetSubsystem<UObjectiveSubsystem>();
+	if(ObjectiveSubsystem.IsValid())
+	{
+		ObjectiveSubsystem->TrackSpotlight(this);
 	}
 }
 
@@ -196,6 +210,10 @@ void ALightSourceAndTargtetActor::FinishedLight()
 	{
 		RedirectActor->SourceFinished(SpotLightComponent);
 	}
-	
+	if(ObjectiveSubsystem.IsValid())
+	{
+		ObjectiveSubsystem->FinishSpotLight();
+	}
+
 }
 

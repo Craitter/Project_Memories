@@ -41,7 +41,8 @@ bool AObjectiveClock::IsAvailableForInteraction_Implementation(AActor* Interacti
 	{
 		return false;
 	}
-	return true;
+	if(ObjectiveSubsystem.IsValid()) return ObjectiveSubsystem->IsInteractable;
+	return false;
 }
 
 FInteractMessageInformation AObjectiveClock::GetInteractionMessageType_Implementation(

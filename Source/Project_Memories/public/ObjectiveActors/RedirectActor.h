@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "RedirectActor.generated.h"
 
+class UObjectiveSubsystem;
 class USpotLightComponent;
 class ALightSourceAndTargtetActor;
 class ATriggerVolume;
@@ -71,5 +72,7 @@ private:
 	FRotator NextRotation = FRotator::ZeroRotator;
 
 	TArray<TWeakObjectPtr<ALightSourceAndTargtetActor>> UniqueLightSources;
+
+	TWeakObjectPtr<UObjectiveSubsystem> ObjectiveSubsystem = {nullptr};
 	
 };

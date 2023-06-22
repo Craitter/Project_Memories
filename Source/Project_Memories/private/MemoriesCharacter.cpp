@@ -6,11 +6,15 @@
 #include "InteractionComponent.h"
 #include "NiagaraComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/MounteaDialogueParticipant.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "ObjectiveActors/FastSwappingTextActor.h"
 #include "Project_Memories/Project_Memories.h"
+#include "Sound/SoundCue.h"
+#include "Subsystems/ObjectiveSubsystem.h"
 
 // Sets default values
 AMemoriesCharacter::AMemoriesCharacter()
@@ -78,6 +82,21 @@ AMemoriesCharacter::AMemoriesCharacter()
 	{
 		NiagaraComponent->SetupAttachment(Torch);
 	}
+
+	FootStep = CreateDefaultSubobject<UAudioComponent>("DefaultGameSound");
+	if(IsValid(FootStep))
+	{
+		FootStep->SetAutoActivate(false);
+		FootStep->SetupAttachment(GetMesh());
+	}
+
+	
+	ClockTicking = CreateDefaultSubobject<UAudioComponent>("ClockTicking");
+	if(IsValid(ClockTicking))
+	{
+		// ClockTicking->SetAutoActivate(false);
+		ClockTicking->SetupAttachment(GetMesh());
+	}
 }
 
 void AMemoriesCharacter::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
@@ -108,6 +127,14 @@ void AMemoriesCharacter::BeginPlay()
 	if(TEmpMesh.IsValid())
 	{
 		TEmpMesh->SetCollisionResponseToChannel(COLLISION_INTERACTABLE, ECR_Overlap);
+	}
+	if(IsPlayerControlled())
+	{
+		GetWorld()->GetSubsystem<UObjectiveSubsystem>()->SetPlayerCharacter(this);
+	}
+	else
+	{
+		bPlaySadAnimation = true;
 	}
 }
 
@@ -179,7 +206,27 @@ void AMemoriesCharacter::Tick(float DeltaTime)
 			bShouldRotateToInteractable = false;
 		}
 	}
-
+	if(FootStep != nullptr)
+	{
+		if(FootStep->IsPlaying())
+		{
+			FVector VelocityIn = GetVelocity();
+			VelocityIn.Z = 0.0f;
+			if(VelocityIn.Length() < 10.0f)
+			{
+				FootStep->SetPaused(true);
+			}
+		}
+		else
+		{
+			FVector VelocityIn = GetVelocity();
+			VelocityIn.Z = 0.0f;
+			if(VelocityIn.Length() >= 10.0f)
+			{
+				FootStep->Play();
+			}
+		}
+	}
 }
 
 
@@ -287,6 +334,25 @@ void AMemoriesCharacter::ClearFastText()
 	}
 }
 
+
+void AMemoriesCharacter::StopClockTicking()
+{
+	if(IsValid(ClockTicking))
+	{
+		ClockTicking->Stop();
+	}
+}
+
+void AMemoriesCharacter::StopMusic()
+{
+	if(PlayingSound != nullptr)
+	{
+		PlayingSound->Stop();
+		PlayingSound->DestroyComponent();
+		
+	}
+}
+
 void AMemoriesCharacter::EnableTorch()
 {
 	bHasTorch = true;
@@ -295,11 +361,28 @@ void AMemoriesCharacter::EnableTorch()
 		TorchDecoration->SetVisibility(true);
 		Torch->SetVisibility(true);
 		NiagaraComponent->Activate();
-		UMounteaDialogueParticipant* Participant = FindComponentByClass<UMounteaDialogueParticipant>();
-		if(IsValid(Participant))
-		{
-			Participant->SetParticipantState(EDialogueParticipantState::EDPS_Disabled);
-		}
+		// TArray<AActor*> Actors;
+		// UGameplayStatics::GetAllActorsOfClass(this, this->StaticClass(), Actors);
+		// for (const auto Actor : Actors)
+		// {
+		// 	TWeakObjectPtr<AMemoriesCharacter> Character = Cast<AMemoriesCharacter>(Actor);
+		// 	if(Character.IsValid() && !Character->IsPlayerControlled())
+		// 	{
+		// 		Character->bIsInteractable = false;
+		// 	}
+		// }
+		//
+		// UMounteaDialogueParticipant* Participant = FindComponentByClass<UMounteaDialogueParticipant>();
+		// if(IsValid(Participant))
+		// {
+		// 	Participant->SetParticipantState(EDialogueParticipantState::EDPS_Disabled);
+		// }
+	}
+
+	const TWeakObjectPtr<UObjectiveSubsystem> ObjectiveSubsystem = GetWorld()->GetSubsystem<UObjectiveSubsystem>();
+	if(ObjectiveSubsystem.IsValid())
+	{
+		ObjectiveSubsystem->IsInteractable = true;
 	}
 }
 

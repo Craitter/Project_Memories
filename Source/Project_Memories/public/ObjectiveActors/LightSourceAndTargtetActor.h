@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "LightSourceAndTargtetActor.generated.h"
 
+class UObjectiveSubsystem;
 class ARedirectActor;
 class ATriggerVolume;
 class USpotLightComponent;
@@ -71,6 +72,8 @@ private:
 	
 	void ActivateLight();
 	void DeactivateLight();
+
+	TWeakObjectPtr<UObjectiveSubsystem> ObjectiveSubsystem = {nullptr};
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

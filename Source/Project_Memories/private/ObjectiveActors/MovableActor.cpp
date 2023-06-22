@@ -7,6 +7,7 @@
 #include "MemoriesCharacter.h"
 #include "Engine/TriggerVolume.h"
 #include "Project_Memories/Project_Memories.h"
+#include "Subsystems/ObjectiveSubsystem.h"
 
 // Sets default values
 AMovableActor::AMovableActor()
@@ -25,13 +26,14 @@ AMovableActor::AMovableActor()
 bool AMovableActor::IsAvailableForInteraction_Implementation(AActor* InteractingActor,
 	UPrimitiveComponent* InteractionComponent) const
 {
-	if(bObjectiveFinished)
+	if(bObjectiveFinished || bIsMoving)
 	{
 		return false;
 	}
 	else
 	{
-		return !bIsMoving;
+		if(ObjectiveSubsystem.IsValid()) return ObjectiveSubsystem->IsInteractable;
+		return false;
 	}
 }
 
@@ -149,6 +151,11 @@ void AMovableActor::BeginPlay()
 		TargetObjective->OnComponentBeginOverlap.AddDynamic(this, &AMovableActor::OnOverlapBegin);
 	}
 	MovesDone.Add(GetActorLocation());
+	ObjectiveSubsystem = GetWorld()->GetSubsystem<UObjectiveSubsystem>();
+	if(ObjectiveSubsystem.IsValid())
+	{
+		ObjectiveSubsystem->TrackMovable(this);
+	}
 }
 
 // Called every frame
@@ -198,6 +205,10 @@ void AMovableActor::Tick(float DeltaTime)
 				else if(GetActorLocation().Equals(OverrideTargetLocation) || GetActorLocation().Equals(TargetTriggerVolume->GetActorLocation()))
 				{
 					bObjectiveFinished = true;
+					if(ObjectiveSubsystem.IsValid())
+					{
+						ObjectiveSubsystem->FinishMovable();
+					}
 				}
 			}	
 		}

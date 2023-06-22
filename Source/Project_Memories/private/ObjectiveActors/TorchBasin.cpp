@@ -3,9 +3,13 @@
 
 #include "ObjectiveActors/TorchBasin.h"
 
+#include "LevelSequence/Public/LevelSequenceActor.h"
+#include "LevelSequenceActor.h"
+#include "LevelSequencePlayer.h"
 #include "MemoriesCharacter.h"
 #include "NiagaraComponent.h"
 #include "Project_Memories/Project_Memories.h"
+#include "Subsystems/ObjectiveSubsystem.h"
 
 // Sets default values
 ATorchBasin::ATorchBasin()
@@ -54,6 +58,33 @@ void ATorchBasin::PostInteract_Implementation(AActor* InteractingActor, UPrimiti
 	{
 		NiagaraComponent->Activate();
 	}
+	if(IsValid(SequenceActor) && IsValid(SequenceActor->SequencePlayer))
+	{
+		TWeakObjectPtr<UGameInstance> GameInstance = GetGameInstance();
+		if(GameInstance.IsValid())
+		{
+			TWeakObjectPtr<APlayerController> Controller = GameInstance->GetPrimaryPlayerController();
+			if(Controller.IsValid())
+			{
+				Controller->DisableInput(Controller.Get());
+				TWeakObjectPtr<APawn> PAwn = Controller->GetPawn();
+				if(PAwn.IsValid())
+				{
+					PAwn->SetActorHiddenInGame(true);
+				}
+			}
+		}
+		
+		SequenceActor->SequencePlayer->Play();
+		SequenceActor->SequencePlayer->OnFinished.AddDynamic(this, &ThisClass::OnSequenceFinished);
+	}
+	else
+	{
+		if(ObjectiveSubsystem.IsValid())
+		{
+			ObjectiveSubsystem->FinishBasin();
+		}
+	}
 }
 
 // Called when the game starts or when spawned
@@ -64,7 +95,11 @@ void ATorchBasin::BeginPlay()
 	{
 		NiagaraComponent->Deactivate();
 	}
-	
+	ObjectiveSubsystem = GetWorld()->GetSubsystem<UObjectiveSubsystem>();
+	if(ObjectiveSubsystem.IsValid())
+	{
+		ObjectiveSubsystem->TrackBasin(this);
+	}
 }
 
 // Called every frame
@@ -72,5 +107,28 @@ void ATorchBasin::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ATorchBasin::OnSequenceFinished()
+{
+	TWeakObjectPtr<UGameInstance> GameInstance = GetGameInstance();
+		if(GameInstance.IsValid())
+		{
+			TWeakObjectPtr<APlayerController> Controller = GameInstance->GetPrimaryPlayerController();
+			if(Controller.IsValid())
+			{
+				Controller->EnableInput(Controller.Get());
+				TWeakObjectPtr<APawn> PAwn = Controller->GetPawn();
+				if(PAwn.IsValid())
+				{
+					PAwn->SetActorHiddenInGame(false);
+				}
+			}
+		}
+	
+	if(ObjectiveSubsystem.IsValid())
+	{
+		ObjectiveSubsystem->FinishBasin();
+	}
 }
 

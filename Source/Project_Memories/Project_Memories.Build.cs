@@ -8,7 +8,7 @@ public class Project_Memories : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "MounteaDialogueSystem", "MounteaDialogueSystemEditor", "Niagara", "NiagaraCore", "NiagaraEditor" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "MounteaDialogueSystem", "MounteaDialogueSystemEditor", "Niagara", "NiagaraCore", "NiagaraEditor", "LevelSequence", "MovieScene" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

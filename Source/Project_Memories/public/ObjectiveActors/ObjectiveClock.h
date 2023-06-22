@@ -64,6 +64,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	bool Locked = false;
 	void SetClockLocked();
 	bool IsStopped();
 
@@ -82,7 +83,6 @@ private:
 	bool bShouldFinish = false;
 	bool bBeginPlayFinished = false;
 	bool bStopped = false;
-	bool Locked = false;
 
 	
 	float CurrentTimeToFinishClock = 0.0f;
@@ -90,4 +90,5 @@ private:
 	float MinuteDegreePerSecond = 0.0f;
 	
 	float SyncToleranceInDegree;
+	
 };

@@ -6,6 +6,7 @@
 #include "Engine/TextRenderActor.h"
 #include "RangeTextActor.generated.h"
 
+class UObjectiveSubsystem;
 class USphereComponent;
 /**
  * 
@@ -38,4 +39,6 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float TextShowHideRange = 100.0f;
+
+	TWeakObjectPtr<UObjectiveSubsystem> ObjectiveSubsystem = nullptr;
 };

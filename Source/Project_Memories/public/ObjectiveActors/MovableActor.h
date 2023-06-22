@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "MovableActor.generated.h"
 
+class UObjectiveSubsystem;
 class ATriggerVolume;
 
 UCLASS()
@@ -89,7 +90,7 @@ protected:
 	bool bIsReadyForInteractionAgain = false;
 
 private:
-	
+	TWeakObjectPtr<UObjectiveSubsystem> ObjectiveSubsystem = {nullptr};
 
 public:	
 	// Called every frame

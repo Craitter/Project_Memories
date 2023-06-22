@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MemoriesCharacter.h"
 #include "ObjectiveActors/ObjectiveClock.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "ObjectiveSubsystem.generated.h"
@@ -11,7 +12,11 @@
  * 
  */
 
+class ATorchBasin;
+class AMovableActor;
+class ALightSourceAndTargtetActor;
 class AObjectiveClock;
+class AMemoriesCharacter;
 
 UENUM()
 enum class EObjectiveType
@@ -32,7 +37,7 @@ class PROJECT_MEMORIES_API UObjectiveSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 
 public:
-
+	UObjectiveSubsystem();
 	
 	void TrackClock(TWeakObjectPtr<AObjectiveClock> InClock, bool bIsLeading);
 
@@ -40,6 +45,30 @@ public:
 
 	void OnSyncRequest(FRotator TargetRotation, float Tolerance);
 
+	bool IsInteractable = false;
+
+	void SetPlayerCharacter(TWeakObjectPtr<AMemoriesCharacter> MemoriesCharacter);
+
+	bool bClocksFinished = true;
+
+	bool bSpotlightsFinished = true;
+
+	bool bFireBowlsFinished = true;
+
+	bool bMovableFinished = true;
+
+	void TryFinishGame();
+
+	void ObjectiveFinished();
+
+	void TrackSpotlight(TWeakObjectPtr<ALightSourceAndTargtetActor> Light);
+	void FinishSpotLight();
+
+	void TrackMovable(TWeakObjectPtr<AMovableActor> MovableActor);
+	void FinishMovable();
+
+	void TrackBasin(TWeakObjectPtr<ATorchBasin> Basin);
+	void FinishBasin();
 private:
 	//Clock Begin
 	TArray<TWeakObjectPtr<AObjectiveClock>> ListeningClocks;
@@ -47,5 +76,20 @@ private:
 
 	TMap<EObjectiveType, bool> ObjectiveTracker;
 
+	TWeakObjectPtr<AMemoriesCharacter> MemoriesCharacter;
+
+
+	TArray<TWeakObjectPtr<ALightSourceAndTargtetActor>> Spotlights;
+	int32 SpotlightIndex = 0;
+	TArray<TWeakObjectPtr<AMovableActor>> Movables;
+	int32 MovableIndex = 0;
+	TArray<TWeakObjectPtr<ATorchBasin>> Basins;
+	int32 BasinIndex = 0;
+
+	
+	
+	TObjectPtr<USoundCue> ClockFinishSound;
+
+	TObjectPtr<USoundCue> OneObjectiveFinishedSound;
 	//ClockEnd;
 };

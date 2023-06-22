@@ -4,8 +4,11 @@
 #include "ObjectiveActors/RangeTextActor.h"
 
 #include "MemoriesCharacter.h"
+#include "Components/BillboardComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Subsystems/ObjectiveSubsystem.h"
 
 ARangeTextActor::ARangeTextActor()
 {
@@ -22,6 +25,14 @@ ARangeTextActor::ARangeTextActor()
 void ARangeTextActor::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	TWeakObjectPtr<APlayerController> Controller = UGameplayStatics::GetPlayerController(this, 0);
+	if(Controller.IsValid())
+	{
+		FRotator NewRotation = Controller->GetControlRotation();
+		NewRotation.Yaw -= 180.0f;
+		NewRotation.Pitch = 0.0f;
+		SetActorRotation(NewRotation);
+	}
 }
 
 void ARangeTextActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -30,7 +41,7 @@ void ARangeTextActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 
 	UTextRenderComponent* TextRenderComponent = GetTextRender();
 	const TWeakObjectPtr<AMemoriesCharacter> Char = Cast<AMemoriesCharacter>(OtherActor);
-	if(Char.IsValid() && TextRenderComponent != nullptr)
+	if(Char.IsValid() && TextRenderComponent != nullptr && ObjectiveSubsystem->IsInteractable)
 	{
 		TextRenderComponent->SetVisibility(true);
 	}
@@ -65,4 +76,6 @@ void ARangeTextActor::BeginPlay()
 	{
 		TextRenderComponent->SetVisibility(false);
 	}
+
+	ObjectiveSubsystem = GetWorld()->GetSubsystem<UObjectiveSubsystem>();
 }
