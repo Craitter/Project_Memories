@@ -71,6 +71,9 @@ public:
 	void FinishBasin();
 
 	FTimerHandle ObjectiveFinishedHandle;
+
+	UFUNCTION(BlueprintCallable)
+	bool CanPassClocks();
 private:
 	//Clock Begin
 	TArray<TWeakObjectPtr<AObjectiveClock>> ListeningClocks;

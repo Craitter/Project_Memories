@@ -112,7 +112,6 @@ void ARedirectActor::RedirectLight(TArray<TWeakObjectPtr<ARedirectActor>>& Redir
 	TWeakObjectPtr<ATriggerVolume> TargetTriggerVolume, TWeakObjectPtr<ALightSourceAndTargtetActor> SourceActor,
 	TWeakObjectPtr<USpotLightComponent> SourceSpotLight, bool bDebug, float TraceRange)
 {
-	UE_LOG(LogTemp, Warning , TEXT("%s %s() "), *GetName(), *FString(__FUNCTION__));
 	if(!bIsFinished)
 	{
 		if(!bShouldRotate)

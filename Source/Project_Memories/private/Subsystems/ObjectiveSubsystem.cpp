@@ -152,3 +152,12 @@ void UObjectiveSubsystem::FinishBasin()
 	}
 }
 
+bool UObjectiveSubsystem::CanPassClocks()
+{
+	if(bClocksFinished && bMovableFinished && bFireBowlsFinished)
+	{
+		return true;
+	}
+	return false;
+}
+
