@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InteractableInterface.h"
-#include "NiagaraActions.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/Character.h"
 #include "MemoriesCharacter.generated.h"
 
