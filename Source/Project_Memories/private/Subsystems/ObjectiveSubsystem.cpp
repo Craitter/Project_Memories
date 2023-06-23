@@ -87,7 +87,7 @@ void UObjectiveSubsystem::SetPlayerCharacter(TWeakObjectPtr<AMemoriesCharacter> 
 
 void UObjectiveSubsystem::TryFinishGame()
 {
-	ObjectiveFinished();
+	GetWorld()->GetTimerManager().SetTimer(ObjectiveFinishedHandle, this, &UObjectiveSubsystem::ObjectiveFinished, 2.1f);
 	if(bClocksFinished && bSpotlightsFinished && bMovableFinished && bFireBowlsFinished)
 	{
 		UE_LOG(LogTemp, Warning , TEXT("%s() GameFInished"), *FString(__FUNCTION__));
@@ -151,3 +151,4 @@ void UObjectiveSubsystem::FinishBasin()
 		TryFinishGame();
 	}
 }
+

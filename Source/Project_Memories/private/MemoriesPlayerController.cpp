@@ -139,15 +139,24 @@ FText AMemoriesPlayerController::GetInteractableVerb(EInteractMessageType Messag
 		case EInteractMessageType::IMT_None:
 			UE_LOG(LogTemp, Error , TEXT("%s() Shouldnt be called with none"), *FString(__FUNCTION__));
 			break;
-	case EInteractMessageType::IMT_Pickup:
-			OutText = FText::FromString(TEXT("Pick up"));
+	case EInteractMessageType::IMT_Push:
+			OutText = FText::FromString(TEXT("Push"));
 			break;
-		case EInteractMessageType::IMT_Open:
-			OutText = FText::FromString(TEXT("Open"));
+		case EInteractMessageType::IMT_Rotate:
+			OutText = FText::FromString(TEXT("Rotate"));
 			break;
 		case EInteractMessageType::IMT_Talk:
 			OutText = FText::FromString(TEXT("Talk"));
 			break;
+		case EInteractMessageType::IMT_Start:
+			OutText = FText::FromString(TEXT("Start"));
+			break;
+		case EInteractMessageType::IMT_Stop:
+			OutText = FText::FromString(TEXT("Stop"));
+			break;
+	case EInteractMessageType::IMT_Ignite:
+		OutText = FText::FromString(TEXT("Ignite"));
+		break;
 		default: ;
 	}
 	return OutText;

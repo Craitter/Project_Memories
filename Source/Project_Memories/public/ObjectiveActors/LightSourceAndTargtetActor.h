@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "LightSourceAndTargtetActor.generated.h"
 
+class AFastSwappingTextActor;
 class UObjectiveSubsystem;
 class ARedirectActor;
 class ATriggerVolume;
@@ -79,4 +80,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void FinishedLight();
+
+	UPROPERTY(EditInstanceOnly)
+	TObjectPtr<AFastSwappingTextActor> FastSwappingTextActor = {nullptr};
 };

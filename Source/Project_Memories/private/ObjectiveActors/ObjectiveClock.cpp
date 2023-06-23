@@ -153,7 +153,7 @@ void AObjectiveClock::Tick(float DeltaTime)
 
 		if(bIsLeadingClock && SyncRequestDelegate.IsBound())
 		{
-			SyncRequestDelegate.Execute(HourDial->GetComponentRotation(), FMath::Abs(SyncToleranceInDegree));
+			SyncRequestDelegate.Execute(HourDial->GetRelativeRotation(), FMath::Abs(SyncToleranceInDegree));
 		}
 	}
 	else
@@ -189,8 +189,8 @@ void AObjectiveClock::StartFinishingClock()
 	bShouldFinish = true;
 	if(IsValid(HourDial) && IsValid(MinuteDial))
 	{
-		MinuteFinishStartRotation = MinuteDial->GetComponentRotation();
-		HourFinishStartRotation = HourDial->GetComponentRotation();
+		MinuteFinishStartRotation = MinuteDial->GetRelativeRotation();
+		HourFinishStartRotation = HourDial->GetRelativeRotation();
 	}
 }
 
@@ -198,7 +198,7 @@ FRotator AObjectiveClock::GetHourHandRotation() const
 {
 	if(IsValid(HourDial))
 	{
-		return HourDial->GetComponentRotation();
+		return HourDial->GetRelativeRotation();
 	}
 	else
 	{

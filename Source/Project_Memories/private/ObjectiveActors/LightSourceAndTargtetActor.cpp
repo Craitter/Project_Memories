@@ -6,6 +6,7 @@
 #include "MemoriesCharacter.h"
 #include "Components/SpotLightComponent.h"
 #include "Engine/TriggerVolume.h"
+#include "ObjectiveActors/FastSwappingTextActor.h"
 #include "ObjectiveActors/RedirectActor.h"
 #include "Project_Memories/Project_Memories.h"
 #include "Subsystems/ObjectiveSubsystem.h"
@@ -214,6 +215,9 @@ void ALightSourceAndTargtetActor::FinishedLight()
 	{
 		ObjectiveSubsystem->FinishSpotLight();
 	}
-
+	if(IsValid(FastSwappingTextActor))
+	{
+		FastSwappingTextActor->ClearText();
+	}
 }
 

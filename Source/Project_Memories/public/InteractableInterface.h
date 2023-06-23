@@ -14,11 +14,17 @@ enum class EInteractMessageType : uint8
 {
 	IMT_None = 0			UMETA(Hidden),
 	
-	IMT_Pickup = 1			UMETA(DisplayName = "Pickup"),
+	IMT_Push = 1			UMETA(DisplayName = "Push"),
  
-	IMT_Open = 2			UMETA(DisplayName = "Open"),
+	IMT_Rotate = 2			UMETA(DisplayName = "Rotate"),
 
-	IMT_Talk = 3			UMETA(DisplayName = "Talk"),
+	IMT_Talk = 4			UMETA(DisplayName = "Talk"),
+
+	IMT_Stop = 5			UMETA(DisplayName = "Stop"),
+
+	IMT_Start = 6			UMETA(DisplayName = "Start"),
+
+	IMT_Ignite = 7			UMETA(DisplayName = "Ignite"),
 	
 };
 

@@ -69,6 +69,8 @@ public:
 
 	void TrackBasin(TWeakObjectPtr<ATorchBasin> Basin);
 	void FinishBasin();
+
+	FTimerHandle ObjectiveFinishedHandle;
 private:
 	//Clock Begin
 	TArray<TWeakObjectPtr<AObjectiveClock>> ListeningClocks;
