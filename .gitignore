@@ -77,3 +77,4 @@ DerivedDataCache/*
 
 
 Plugins/Developer/RiderLink/*
+*.pdb
