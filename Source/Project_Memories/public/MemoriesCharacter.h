@@ -75,8 +75,13 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAudioComponent> FootStep;
 
+
+	
 public:
 
+	UPROPERTY(EditDefaultsOnly)
+	FRuntimeFloatCurve MeltCurve;
+	
 	UPROPERTY(BlueprintReadWrite)
 	bool bFinishGameNow= false;
 

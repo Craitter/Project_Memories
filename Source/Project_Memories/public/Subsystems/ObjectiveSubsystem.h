@@ -12,11 +12,14 @@
  * 
  */
 
+class ALandscape;
 class ATorchBasin;
 class AMovableActor;
 class ALightSourceAndTargtetActor;
 class AObjectiveClock;
 class AMemoriesCharacter;
+class UFoliageInstancedStaticMeshComponent;
+
 
 UENUM()
 enum class EObjectiveType
@@ -39,6 +42,9 @@ class PROJECT_MEMORIES_API UObjectiveSubsystem : public UWorldSubsystem
 public:
 	UFUNCTION(BlueprintCallable)
 	bool IsGameFInished();
+
+	UFUNCTION(BlueprintCallable)
+	void MeltLevelDown(float TotalMeltTime, float MeltDeltaTime);
 	
 	UObjectiveSubsystem();
 	
@@ -102,4 +108,49 @@ private:
 
 	TObjectPtr<USoundCue> OneObjectiveFinishedSound;
 	//ClockEnd;
+
+
+	float CurrentMeltTime = 0.0f;
+
+	float MeltTime = 0.0f;
+
+	float DeltaTime = 0.0f;
+	
+	FRuntimeFloatCurve MeltCurve;
+
+	void OnMeltAway();
+
+	void UpdateMelting();
+	
+	FTimerHandle MeltHandle;
+
+	UPROPERTY()
+	TObjectPtr<UMaterialInstance> MeltingMaterialInstance;
+
+	UPROPERTY()
+	TObjectPtr<UMaterialParameterCollectionInstance> ParameterCollectionInstance;
+
+	UPROPERTY()
+	TObjectPtr<UMaterialParameterCollection> ParameterCollection;
+	
+	UPROPERTY()
+	TArray<AActor*> AllActors;
+
+	UPROPERTY()
+	TArray<UStaticMeshComponent*> AllStaticMeshes;
+
+	UPROPERTY()
+	TArray<UInstancedStaticMeshComponent*> AllInstancedStaticMeshes;
+
+	UPROPERTY()
+	TArray<USkeletalMeshComponent*> AllSkeletals;
+
+	UPROPERTY()
+	TArray<UTextRenderComponent*> AllTextRender;
+	//
+	// UPROPERTY()
+	// TArray<ALandscape*> Landscapes;
+
+	UPROPERTY()
+	TArray<UFoliageInstancedStaticMeshComponent*> InstancedFoliageActors;
 };
