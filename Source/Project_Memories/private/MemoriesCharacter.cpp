@@ -229,6 +229,25 @@ void AMemoriesCharacter::Tick(float DeltaTime)
 	}
 }
 
+void AMemoriesCharacter::PauseClockTicking()
+{
+	if(IsValid(ClockTicking))
+	{
+		VolumeTIcking = ClockTicking->VolumeMultiplier;
+		ClockTicking->SetVolumeMultiplier(0.0f);
+		ClockTicking->Stop();
+	}
+}
+
+void AMemoriesCharacter::StartClockTIcking()
+{
+	if(IsValid(ClockTicking) && !ClockTicking->IsPlaying())
+	{
+		ClockTicking->SetVolumeMultiplier(VolumeTIcking);
+		ClockTicking->Play();
+	}
+}
+
 
 void AMemoriesCharacter::Jump()
 {
@@ -339,7 +358,9 @@ void AMemoriesCharacter::StopClockTicking()
 {
 	if(IsValid(ClockTicking))
 	{
+		ClockTicking->SetVolumeMultiplier(0.0f);
 		ClockTicking->Stop();
+		ClockTicking->DestroyComponent();
 	}
 }
 

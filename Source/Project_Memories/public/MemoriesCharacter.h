@@ -77,8 +77,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
+	UFUNCTION(BlueprintCallable)
+	void PauseClockTicking();
+	UFUNCTION(BlueprintCallable)
+	void StartClockTIcking();
 
+	float VolumeTIcking;
 	virtual void Jump() override;
 	//Begin InputCallbacks
 	void TryStartRun();
