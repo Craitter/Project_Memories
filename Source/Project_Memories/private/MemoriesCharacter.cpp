@@ -68,15 +68,7 @@ AMemoriesCharacter::AMemoriesCharacter()
 	Torch = CreateDefaultSubobject<UStaticMeshComponent>("Torch");
 	if(IsValid(Torch))
 	{
-		
-		if(GetMesh()->DoesSocketExist("righthandsocket"))
-		{
-			Torch->SetupAttachment(GetMesh(), "righthandsocket");
-		}
-		else
-		{
-			Torch->SetupAttachment(GetMesh(), "RightHandMiddle1");
-		}
+		Torch->SetupAttachment(GetMesh(), "righthandsocket");
 	}
 
 	TorchDecoration = CreateDefaultSubobject<UStaticMeshComponent>("TorchDecoration");
@@ -403,14 +395,14 @@ void AMemoriesCharacter::EnableTorch()
 	bHasTorch = true;
 	if(IsValid(NiagaraComponent) && IsValid(Torch) && IsValid(TorchDecoration))
 	{
-		if(IsPlayerControlled())
-		{
-			Torch->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale , "righthandsocket");
-		}
-		else
-		{
-			Torch->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale , "RightHandMiddle1");
-		}
+		// if(IsPlayerControlled())
+		// {
+		// 	Torch->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale , "righthandsocket");
+		// }
+		// else
+		// {
+		// 	Torch->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale , "RightHandMiddle1");
+		// }
 		TorchDecoration->SetVisibility(true);
 		Torch->SetVisibility(true);
 		NiagaraComponent->Activate();
