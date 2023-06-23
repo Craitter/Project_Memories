@@ -74,7 +74,20 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAudioComponent> FootStep;
-public:	
+
+public:
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bFinishGameNow= false;
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveTorch();
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
+	bool bHasTorchAtGameStart = false;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
+	bool bIsLAstCharacter = false;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable)

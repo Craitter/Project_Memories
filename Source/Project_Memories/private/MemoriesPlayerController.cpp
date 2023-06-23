@@ -246,6 +246,7 @@ void AMemoriesPlayerController::OnInteractEndInput(const FInputActionValue& Valu
 
 void AMemoriesPlayerController::OnCrouchInput(const FInputActionValue& Value)
 {
+	return;
 	if(MemoriesCharacter.IsValid())
 	{
 		MemoriesCharacter->TryCrouch();

@@ -37,6 +37,9 @@ class PROJECT_MEMORIES_API UObjectiveSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable)
+	bool IsGameFInished();
+	
 	UObjectiveSubsystem();
 	
 	void TrackClock(TWeakObjectPtr<AObjectiveClock> InClock, bool bIsLeading);
@@ -84,6 +87,8 @@ private:
 	TWeakObjectPtr<AMemoriesCharacter> MemoriesCharacter;
 
 
+	bool bGameFinished = false;
+	
 	TArray<TWeakObjectPtr<ALightSourceAndTargtetActor>> Spotlights;
 	int32 SpotlightIndex = 0;
 	TArray<TWeakObjectPtr<AMovableActor>> Movables;

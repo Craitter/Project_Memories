@@ -7,6 +7,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 
+bool UObjectiveSubsystem::IsGameFInished()
+{
+	return bGameFinished;
+}
+
 UObjectiveSubsystem::UObjectiveSubsystem()
 {
 	static ConstructorHelpers::FObjectFinder<USoundCue> ClockBPSound(TEXT("/Game/SFX/Clock"));
@@ -91,7 +96,7 @@ void UObjectiveSubsystem::TryFinishGame()
 	if(bClocksFinished && bSpotlightsFinished && bMovableFinished && bFireBowlsFinished)
 	{
 		UE_LOG(LogTemp, Warning , TEXT("%s() GameFInished"), *FString(__FUNCTION__));
-		//Finish Game
+		bGameFinished = true;
 	}
 }
 

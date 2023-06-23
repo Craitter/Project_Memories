@@ -68,7 +68,15 @@ AMemoriesCharacter::AMemoriesCharacter()
 	Torch = CreateDefaultSubobject<UStaticMeshComponent>("Torch");
 	if(IsValid(Torch))
 	{
-		Torch->SetupAttachment(GetMesh(), "righthandsocket");
+		
+		if(GetMesh()->DoesSocketExist("righthandsocket"))
+		{
+			Torch->SetupAttachment(GetMesh(), "righthandsocket");
+		}
+		else
+		{
+			Torch->SetupAttachment(GetMesh(), "RightHandMiddle1");
+		}
 	}
 
 	TorchDecoration = CreateDefaultSubobject<UStaticMeshComponent>("TorchDecoration");
@@ -119,9 +127,14 @@ void AMemoriesCharacter::BeginPlay()
 	}
 	if(IsValid(NiagaraComponent) && IsValid(Torch) && IsValid(TorchDecoration))
 	{
-		TorchDecoration->SetVisibility(false);
-		Torch->SetVisibility(false);
-		NiagaraComponent->Deactivate();
+		
+		if(!bHasTorchAtGameStart)
+		{
+			TorchDecoration->SetVisibility(false);
+			Torch->SetVisibility(false);
+			NiagaraComponent->Deactivate();
+		}
+		
 	}
 	const TWeakObjectPtr<USkeletalMeshComponent> TEmpMesh = GetMesh();
 	if(TEmpMesh.IsValid())
@@ -135,6 +148,17 @@ void AMemoriesCharacter::BeginPlay()
 	else
 	{
 		bPlaySadAnimation = true;
+	}
+}
+
+void AMemoriesCharacter::RemoveTorch()
+{
+	if(IsValid(NiagaraComponent) && IsValid(Torch) && IsValid(TorchDecoration))
+	{
+		TorchDecoration->SetVisibility(false);
+		Torch->SetVisibility(false);
+		NiagaraComponent->Deactivate();
+		
 	}
 }
 
@@ -379,25 +403,17 @@ void AMemoriesCharacter::EnableTorch()
 	bHasTorch = true;
 	if(IsValid(NiagaraComponent) && IsValid(Torch) && IsValid(TorchDecoration))
 	{
+		if(IsPlayerControlled())
+		{
+			Torch->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale , "righthandsocket");
+		}
+		else
+		{
+			Torch->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetIncludingScale , "RightHandMiddle1");
+		}
 		TorchDecoration->SetVisibility(true);
 		Torch->SetVisibility(true);
 		NiagaraComponent->Activate();
-		// TArray<AActor*> Actors;
-		// UGameplayStatics::GetAllActorsOfClass(this, this->StaticClass(), Actors);
-		// for (const auto Actor : Actors)
-		// {
-		// 	TWeakObjectPtr<AMemoriesCharacter> Character = Cast<AMemoriesCharacter>(Actor);
-		// 	if(Character.IsValid() && !Character->IsPlayerControlled())
-		// 	{
-		// 		Character->bIsInteractable = false;
-		// 	}
-		// }
-		//
-		// UMounteaDialogueParticipant* Participant = FindComponentByClass<UMounteaDialogueParticipant>();
-		// if(IsValid(Participant))
-		// {
-		// 	Participant->SetParticipantState(EDialogueParticipantState::EDPS_Disabled);
-		// }
 	}
 
 	const TWeakObjectPtr<UObjectiveSubsystem> ObjectiveSubsystem = GetWorld()->GetSubsystem<UObjectiveSubsystem>();
