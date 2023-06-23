@@ -48,6 +48,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> RotatingMesh = {nullptr};
+	
 
 	//This Component will be updated by the SourceLight, no need to set values here 
 	UPROPERTY(VisibleAnywhere)
