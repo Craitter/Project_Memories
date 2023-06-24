@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "RedirectActor.generated.h"
 
+class UPointLightComponent;
 class UObjectiveSubsystem;
 class USpotLightComponent;
 class ALightSourceAndTargtetActor;
@@ -49,12 +50,17 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> RotatingMesh = {nullptr};
 
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UPointLightComponent> TopPointLight = {nullptr};
+
 	//This Component will be updated by the SourceLight, no need to set values here 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USpotLightComponent> SpotLightComponent = {nullptr};
 
 	UPROPERTY(EditAnywhere)
 	FInteractMessageInformation MessageInfo;
+
+	float TempIntensity = 0.0f;
 
 	void RemoveSourceLight(TWeakObjectPtr<ALightSourceAndTargtetActor> InSource);
 private:

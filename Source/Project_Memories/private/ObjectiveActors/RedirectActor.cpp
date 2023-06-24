@@ -32,7 +32,11 @@ ARedirectActor::ARedirectActor()
 		SpotLightComponent->SetCastShadows(false);
 		SpotLightComponent->SetIntensity(0.0f);
 	}
-
+	TopPointLight = CreateDefaultSubobject<UPointLightComponent>("TopPointLight");
+	if(IsValid(TopPointLight))
+	{
+		TopPointLight->SetupAttachment(RotatingMesh);
+	}
 
 }
 
@@ -79,6 +83,11 @@ void ARedirectActor::BeginPlay()
 {
 	Super::BeginPlay();
 	ObjectiveSubsystem = GetWorld()->GetSubsystem<UObjectiveSubsystem>();
+	if(IsValid(TopPointLight))
+	{
+		TempIntensity = TopPointLight->Intensity;
+		TopPointLight->SetIntensity(0.0f);
+	}
 }
 
 // Called every frame
@@ -166,6 +175,10 @@ void ARedirectActor::RedirectLight(TArray<TWeakObjectPtr<ARedirectActor>>& Redir
 						}
 						break;
 					}
+					// if(IsValid(SpotLightComponent))
+					// {
+					// 	
+					// }
 				}
 			}
 		}
@@ -180,18 +193,20 @@ void ARedirectActor::SourceFinished(TWeakObjectPtr<USpotLightComponent> SourceSp
 
 void ARedirectActor::ActivateLight(float NewIntensity) const
 {
-	if(SpotLightComponent != nullptr)
+	if(SpotLightComponent != nullptr && TopPointLight != nullptr)
 	{
 		SpotLightComponent->SetIntensity(NewIntensity);
+		TopPointLight->SetIntensity(TempIntensity);
 	}
 }
 
 void ARedirectActor::DeactivateLight()
 {
-	if(SpotLightComponent != nullptr)
+	if(SpotLightComponent != nullptr && TopPointLight != nullptr)
 	{
 		CachedIntensity = SpotLightComponent->Intensity;
 		SpotLightComponent->SetIntensity(0.0f);
+		TopPointLight->SetIntensity(0.0f);
 	}
 }
 
