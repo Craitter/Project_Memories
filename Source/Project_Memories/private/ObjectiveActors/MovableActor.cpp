@@ -152,10 +152,10 @@ void AMovableActor::BeginPlay()
 	}
 	MovesDone.Add(GetActorLocation());
 	ObjectiveSubsystem = GetWorld()->GetSubsystem<UObjectiveSubsystem>();
-	if(ObjectiveSubsystem.IsValid())
-	{
-		ObjectiveSubsystem->TrackMovable(this);
-	}
+	// if(ObjectiveSubsystem.IsValid())
+	// {
+	// 	ObjectiveSubsystem->TrackMovable(this);
+	// }
 }
 
 // Called every frame
@@ -205,10 +205,10 @@ void AMovableActor::Tick(float DeltaTime)
 				else if(GetActorLocation().Equals(OverrideTargetLocation) || GetActorLocation().Equals(TargetTriggerVolume->GetActorLocation()))
 				{
 					bObjectiveFinished = true;
-					if(ObjectiveSubsystem.IsValid())
-					{
-						ObjectiveSubsystem->FinishMovable();
-					}
+					// if(ObjectiveSubsystem.IsValid())
+					// {
+					// 	ObjectiveSubsystem->FinishMovable();
+					// }
 				}
 			}	
 		}
