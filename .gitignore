@@ -2,29 +2,29 @@
 .vs/
 
 # Compiled Object files
-#*.slo
-#*.lo
-#*.o
-#*.obj
+*.slo
+*.lo
+*.o
+*.obj
 *.fbx
 
 # Precompiled Headers
-#*.gch
-#*.pch
+*.gch
+*.pch
 
 # Compiled Dynamic libraries
-#*.so
-#*.dylib
-#*.dll
+*.so
+*.dylib
+*.dll
 
 # Fortran module files
 *.mod
 
 # Compiled Static libraries
-#*.lai
-#*.la
-#*.a
-#*.lib
+*.lai
+*.la
+*.a
+*.lib
 
 # Executables
 *.exe
@@ -48,6 +48,7 @@ SourceArt/**/*.tga
 
 # Binary Files
 !Binaries/*
+!Binaries/*.*
 # Binaries/*
 # Plugins/*/Binaries/*
 
